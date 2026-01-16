@@ -51,7 +51,7 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Canvas container - sized to match scaled canvas for proper hit testing */
+        /* Canvas container for centering */
         #canvas-container {
             display: flex;
             justify-content: center;
@@ -60,21 +60,10 @@
             height: 100%;
         }
 
-        /* Wrapper that gets sized to the scaled dimensions */
-        #canvas-wrapper {
-            position: relative;
-            width: 880px;
-            height: 600px;
-            overflow: hidden;
-        }
-
-        /* Canvas renders at full size, scaled via transform */
+        /* Canvas - egui handles internal scaling via pixels_per_point */
         canvas {
             display: block;
-            width: 880px;
-            height: 600px;
             border: 1px solid #333;
-            transform-origin: top left;
         }
     </style>
     <link data-trunk rel="rust" data-wasm-opt="2" />
@@ -87,11 +76,9 @@
         <div style="margin-top: 20px; color: #666;">Loading WASM...</div>
     </div>
 
-    <!-- Canvas container for responsive scaling -->
+    <!-- Canvas container for centering -->
     <div id="canvas-container">
-        <div id="canvas-wrapper">
-            <canvas id="the_canvas_id"></canvas>
-        </div>
+        <canvas id="the_canvas_id"></canvas>
     </div>
 
     <script>
@@ -107,43 +94,6 @@
                 }
             }, 2000);
         }
-
-        // Responsive canvas scaling
-        (function() {
-            const CANVAS_WIDTH = 880;
-            const CANVAS_HEIGHT = 600;
-            const PADDING = 10;
-
-            function updateScale() {
-                const canvas = document.getElementById('the_canvas_id');
-                const wrapper = document.getElementById('canvas-wrapper');
-                if (!canvas || !wrapper) return;
-
-                const availableWidth = window.innerWidth - (PADDING * 2);
-                const availableHeight = window.innerHeight - (PADDING * 2);
-
-                // Calculate scale factor (only scale down, never up)
-                let scale = 1.0;
-                if (availableWidth < CANVAS_WIDTH || availableHeight < CANVAS_HEIGHT) {
-                    const scaleX = availableWidth / CANVAS_WIDTH;
-                    const scaleY = availableHeight / CANVAS_HEIGHT;
-                    scale = Math.min(scaleX, scaleY, 1.0);
-                }
-
-                // Apply transform to canvas
-                canvas.style.transform = `scale(${scale})`;
-
-                // Resize wrapper to match scaled dimensions (for proper layout)
-                wrapper.style.width = (CANVAS_WIDTH * scale) + 'px';
-                wrapper.style.height = (CANVAS_HEIGHT * scale) + 'px';
-            }
-
-            window.addEventListener('load', updateScale);
-            window.addEventListener('resize', updateScale);
-            window.addEventListener('orientationchange', function() {
-                setTimeout(updateScale, 100);
-            });
-        })();
     </script>
 </body>
 </html>
