@@ -64,16 +64,18 @@
             height: 100%;
         }
 
-        /* Canvas - egui handles internal scaling via pixels_per_point */
+        /* Canvas - fixed size */
         canvas {
             display: block;
+            width: 880px;
+            height: 550px;
             border: 1px solid #333;
         }
     </style>
     
-<script type="module" nonce="CV1w1L64n+QKqfEzSicpBA==">
-import init, * as bindings from '/fresh_powder-web/fresh-powder-web-demo-5aafc2796b675425.js';
-const wasm = await init({ module_or_path: '/fresh_powder-web/fresh-powder-web-demo-5aafc2796b675425_bg.wasm' });
+<script type="module" nonce="fggrjZgnDIiN6kL6uMtQVg==">
+import init, * as bindings from '/fresh_powder-web/fresh-powder-web-demo-739b55bf31f48529.js';
+const wasm = await init({ module_or_path: '/fresh_powder-web/fresh-powder-web-demo-739b55bf31f48529_bg.wasm' });
 
 
 window.wasmBindings = bindings;
@@ -83,7 +85,7 @@ dispatchEvent(new CustomEvent("TrunkApplicationStarted", {detail: {wasm}}));
 
 </script>
     
-<link rel="modulepreload" href="/fresh_powder-web/fresh-powder-web-demo-5aafc2796b675425.js" crossorigin=anonymous integrity="sha384-6VHDaq68ObFwuB8viINz2FQ4sBSWr10V4fj4XYEFm+Vz03i5Ik8XXtEOzWVESgUc"><link rel="preload" href="/fresh_powder-web/fresh-powder-web-demo-5aafc2796b675425_bg.wasm" crossorigin=anonymous integrity="sha384-2DwC2GWsaNkAdowdXLHICRAvVDUa+ymBLfH41iRWBS2QN+6rfB+MFX6llHV9y0aY" as="fetch" type="application/wasm"></head>
+<link rel="modulepreload" href="/fresh_powder-web/fresh-powder-web-demo-739b55bf31f48529.js" crossorigin=anonymous integrity="sha384-5/hKwDK92NkiX164z0uQQB/trF+AqUAOTQHKtKT6Ixf8CyeSyVuO1GWi402yWQ2h"><link rel="preload" href="/fresh_powder-web/fresh-powder-web-demo-739b55bf31f48529_bg.wasm" crossorigin=anonymous integrity="sha384-FB6T5jEtl5Sp+YWpprPE5pR7xDsk4SkpbLyVlJcPzl/9pU8sWIgxhdov700FE4P+" as="fetch" type="application/wasm"></head>
 <body>
     <div id="loading">
         <div class="loading-title">fresh__powder__</div>
