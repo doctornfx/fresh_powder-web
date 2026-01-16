@@ -51,7 +51,7 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Canvas container for responsive scaling */
+        /* Canvas container - sized to match scaled canvas for proper hit testing */
         #canvas-container {
             display: flex;
             justify-content: center;
@@ -60,15 +60,21 @@
             height: 100%;
         }
 
-        /* Canvas styling - responsive sizing */
+        /* Wrapper that gets sized to the scaled dimensions */
+        #canvas-wrapper {
+            position: relative;
+            width: 880px;
+            height: 600px;
+            overflow: hidden;
+        }
+
+        /* Canvas renders at full size, scaled via transform */
         canvas {
             display: block;
-            max-width: calc(100vw - 40px);
-            max-height: calc(100vh - 40px);
             width: 880px;
             height: 600px;
             border: 1px solid #333;
-            object-fit: contain;
+            transform-origin: top left;
         }
     </style>
     <link data-trunk rel="rust" data-wasm-opt="2" />
@@ -83,7 +89,9 @@
 
     <!-- Canvas container for responsive scaling -->
     <div id="canvas-container">
-        <canvas id="the_canvas_id"></canvas>
+        <div id="canvas-wrapper">
+            <canvas id="the_canvas_id"></canvas>
+        </div>
     </div>
 
     <script>
@@ -104,37 +112,30 @@
         (function() {
             const CANVAS_WIDTH = 880;
             const CANVAS_HEIGHT = 600;
-            const ASPECT_RATIO = CANVAS_WIDTH / CANVAS_HEIGHT;
-            const PADDING = 20;
+            const PADDING = 10;
 
             function updateScale() {
                 const canvas = document.getElementById('the_canvas_id');
-                if (!canvas) return;
+                const wrapper = document.getElementById('canvas-wrapper');
+                if (!canvas || !wrapper) return;
 
                 const availableWidth = window.innerWidth - (PADDING * 2);
                 const availableHeight = window.innerHeight - (PADDING * 2);
 
-                // Only scale down, never up (desktop stays at 1.0)
-                if (availableWidth >= CANVAS_WIDTH && availableHeight >= CANVAS_HEIGHT) {
-                    canvas.style.width = CANVAS_WIDTH + 'px';
-                    canvas.style.height = CANVAS_HEIGHT + 'px';
-                    return;
+                // Calculate scale factor (only scale down, never up)
+                let scale = 1.0;
+                if (availableWidth < CANVAS_WIDTH || availableHeight < CANVAS_HEIGHT) {
+                    const scaleX = availableWidth / CANVAS_WIDTH;
+                    const scaleY = availableHeight / CANVAS_HEIGHT;
+                    scale = Math.min(scaleX, scaleY, 1.0);
                 }
 
-                // Calculate size maintaining aspect ratio
-                let newWidth, newHeight;
-                if (availableWidth / availableHeight > ASPECT_RATIO) {
-                    // Height is the limiting factor
-                    newHeight = availableHeight;
-                    newWidth = newHeight * ASPECT_RATIO;
-                } else {
-                    // Width is the limiting factor
-                    newWidth = availableWidth;
-                    newHeight = newWidth / ASPECT_RATIO;
-                }
+                // Apply transform to canvas
+                canvas.style.transform = `scale(${scale})`;
 
-                canvas.style.width = newWidth + 'px';
-                canvas.style.height = newHeight + 'px';
+                // Resize wrapper to match scaled dimensions (for proper layout)
+                wrapper.style.width = (CANVAS_WIDTH * scale) + 'px';
+                wrapper.style.height = (CANVAS_HEIGHT * scale) + 'px';
             }
 
             window.addEventListener('load', updateScale);
