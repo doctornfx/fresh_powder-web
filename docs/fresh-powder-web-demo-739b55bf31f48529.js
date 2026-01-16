@@ -304,15 +304,15 @@ function wasm_bindgen__convert__closures_____invoke__h08499e067dfec6f6(arg0, arg
     wasm.wasm_bindgen__convert__closures_____invoke__h08499e067dfec6f6(arg0, arg1, arg2);
 }
 
+function wasm_bindgen__convert__closures_____invoke__h836b4fd5b3a56e98(arg0, arg1, arg2) {
+    wasm.wasm_bindgen__convert__closures_____invoke__h836b4fd5b3a56e98(arg0, arg1, arg2);
+}
+
 function wasm_bindgen__convert__closures_____invoke__h45815057728d5a14(arg0, arg1) {
     const ret = wasm.wasm_bindgen__convert__closures_____invoke__h45815057728d5a14(arg0, arg1);
     if (ret[1]) {
         throw takeFromExternrefTable0(ret[0]);
     }
-}
-
-function wasm_bindgen__convert__closures_____invoke__h836b4fd5b3a56e98(arg0, arg1, arg2) {
-    wasm.wasm_bindgen__convert__closures_____invoke__h836b4fd5b3a56e98(arg0, arg1, arg2);
 }
 
 function wasm_bindgen__convert__closures_____invoke__h4fb7d6a6d94ba06f(arg0, arg1, arg2) {
