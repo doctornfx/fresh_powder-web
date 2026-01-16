@@ -64,18 +64,19 @@
             height: 100%;
         }
 
-        /* Canvas styling - fixed size matching plugin, scaled via JS */
+        /* Canvas styling - responsive sizing */
         canvas {
             display: block;
+            max-width: calc(100vw - 10px);
+            max-height: calc(100vh - 10px);
             width: 880px;
             height: 550px;
             border: 1px solid #333;
-            transform-origin: center center;
-            touch-action: none;
+            object-fit: contain;
         }
     </style>
     
-<script type="module" nonce="UkEkKWKNxVuItyiv4eOs2g==">
+<script type="module" nonce="X0J9p3daNnu0n8WQz/cLNw==">
 import init, * as bindings from '/fresh_powder-web/fresh-powder-web-demo-739b55bf31f48529.js';
 const wasm = await init({ module_or_path: '/fresh_powder-web/fresh-powder-web-demo-739b55bf31f48529_bg.wasm' });
 
@@ -87,7 +88,7 @@ dispatchEvent(new CustomEvent("TrunkApplicationStarted", {detail: {wasm}}));
 
 </script>
     
-<link rel="modulepreload" href="/fresh_powder-web/fresh-powder-web-demo-739b55bf31f48529.js" crossorigin=anonymous integrity="sha384-gyIq2CdcdsXAw7l3nt+5icEge/fe2obHwt9SX19hLTEiLcM/CUI35MewxqcLOcoU"><link rel="preload" href="/fresh_powder-web/fresh-powder-web-demo-739b55bf31f48529_bg.wasm" crossorigin=anonymous integrity="sha384-AwDGq624k94Wyzf0KUpuUSE/JcCVeBrqHbAuXOAaqlHBVOe0DMtMoUBZGoNWakJI" as="fetch" type="application/wasm"></head>
+<link rel="modulepreload" href="/fresh_powder-web/fresh-powder-web-demo-739b55bf31f48529.js" crossorigin=anonymous integrity="sha384-9awWWVlhIwydy0lOpqZeasnCpRMgSblaZSW7qkI7Wf50JHNWx9gmUoMz1zteqzZA"><link rel="preload" href="/fresh_powder-web/fresh-powder-web-demo-739b55bf31f48529_bg.wasm" crossorigin=anonymous integrity="sha384-v5N651uxFDp4Z+kTL3RBgM2MOYpqB5uyDIkANCaTpRQtJJlin/xwBOWHkX4dZ4ge" as="fetch" type="application/wasm"></head>
 <body>
     <div id="loading">
         <div class="loading-title">fresh__powder__</div>
@@ -104,6 +105,7 @@ dispatchEvent(new CustomEvent("TrunkApplicationStarted", {detail: {wasm}}));
     (function() {
         const CANVAS_WIDTH = 880;
         const CANVAS_HEIGHT = 550;
+        const ASPECT_RATIO = CANVAS_WIDTH / CANVAS_HEIGHT;
         const PADDING = 20;
 
         function updateScale() {
@@ -115,15 +117,25 @@ dispatchEvent(new CustomEvent("TrunkApplicationStarted", {detail: {wasm}}));
 
             // Only scale down, never up (desktop stays at 1.0)
             if (availableWidth >= CANVAS_WIDTH && availableHeight >= CANVAS_HEIGHT) {
-                canvas.style.transform = 'none';
+                canvas.style.width = CANVAS_WIDTH + 'px';
+                canvas.style.height = CANVAS_HEIGHT + 'px';
                 return;
             }
 
-            const scaleX = availableWidth / CANVAS_WIDTH;
-            const scaleY = availableHeight / CANVAS_HEIGHT;
-            const scale = Math.min(scaleX, scaleY, 1.0);
+            // Calculate size maintaining aspect ratio
+            let newWidth, newHeight;
+            if (availableWidth / availableHeight > ASPECT_RATIO) {
+                // Height is the limiting factor
+                newHeight = availableHeight;
+                newWidth = newHeight * ASPECT_RATIO;
+            } else {
+                // Width is the limiting factor
+                newWidth = availableWidth;
+                newHeight = newWidth / ASPECT_RATIO;
+            }
 
-            canvas.style.transform = `scale(${scale})`;
+            canvas.style.width = newWidth + 'px';
+            canvas.style.height = newHeight + 'px';
         }
 
         window.addEventListener('load', updateScale);

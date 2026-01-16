@@ -60,14 +60,15 @@
             height: 100%;
         }
 
-        /* Canvas styling - fixed size matching plugin, scaled via JS */
+        /* Canvas styling - responsive sizing */
         canvas {
             display: block;
+            max-width: calc(100vw - 40px);
+            max-height: calc(100vh - 40px);
             width: 880px;
             height: 600px;
             border: 1px solid #333;
-            transform-origin: center center;
-            touch-action: none;
+            object-fit: contain;
         }
     </style>
     <link data-trunk rel="rust" data-wasm-opt="2" />
@@ -103,6 +104,7 @@
         (function() {
             const CANVAS_WIDTH = 880;
             const CANVAS_HEIGHT = 600;
+            const ASPECT_RATIO = CANVAS_WIDTH / CANVAS_HEIGHT;
             const PADDING = 20;
 
             function updateScale() {
@@ -114,15 +116,25 @@
 
                 // Only scale down, never up (desktop stays at 1.0)
                 if (availableWidth >= CANVAS_WIDTH && availableHeight >= CANVAS_HEIGHT) {
-                    canvas.style.transform = 'none';
+                    canvas.style.width = CANVAS_WIDTH + 'px';
+                    canvas.style.height = CANVAS_HEIGHT + 'px';
                     return;
                 }
 
-                const scaleX = availableWidth / CANVAS_WIDTH;
-                const scaleY = availableHeight / CANVAS_HEIGHT;
-                const scale = Math.min(scaleX, scaleY, 1.0);
+                // Calculate size maintaining aspect ratio
+                let newWidth, newHeight;
+                if (availableWidth / availableHeight > ASPECT_RATIO) {
+                    // Height is the limiting factor
+                    newHeight = availableHeight;
+                    newWidth = newHeight * ASPECT_RATIO;
+                } else {
+                    // Width is the limiting factor
+                    newWidth = availableWidth;
+                    newHeight = newWidth / ASPECT_RATIO;
+                }
 
-                canvas.style.transform = `scale(${scale})`;
+                canvas.style.width = newWidth + 'px';
+                canvas.style.height = newHeight + 'px';
             }
 
             window.addEventListener('load', updateScale);
