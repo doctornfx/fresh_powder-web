@@ -1,2 +1,2 @@
 # fresh_powder-web
-web version of fresh_powder
+Live web demo of fresh_powder! Check it out at https://doctornfx.github.io/fresh_powder-web/
